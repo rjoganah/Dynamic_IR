@@ -1,0 +1,3 @@
+runid,topic,ct_speed@10,ct_accel@10
+test/runs/relevance.txt,89,0.0000000000,0.0000000000
+test/runs/relevance.txt,amean,0.0000000000,0.0000000000

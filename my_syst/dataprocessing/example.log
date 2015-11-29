@@ -1,0 +1,48 @@
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.461 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.055 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.179 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.039 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.020 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.028 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.025 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.037 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.015 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.038 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.236 seconds.
+DEBUG:pysolr:Starting request to 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>'...
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"POST /solr/update/?commit=true HTTP/1.1" 200 None
+INFO:pysolr:Finished 'http://localhost:8983/solr/update/?commit=true' (post) with body 'u'<delete>' in 0.016 seconds.

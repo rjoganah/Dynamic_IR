@@ -1,0 +1,329 @@
+from ExpectationMaximization import ExpectationMaximization
+from query_expansion.Rocchio import Rocchio
+import pysolr
+import solr
+import csv
+from scipy.sparse import csr_matrix
+from scipy.sparse import coo_matrix
+import pickle
+import time
+import nltk
+import logging
+
+import pprint
+
+import subprocess
+import cubetest.runscript as cubetest
+# -*- coding: utf-8 -*-
+logging.basicConfig(filename='example.log',level=logging.DEBUG)
+conn = solr.SolrConnection('http://localhost:8983/solr')
+solr = pysolr.Solr('http://localhost:8983/solr/', timeout=10)
+
+
+# data_politique = pickle.load( open( "articles.p", "rb" ) )
+# data_ebola =  pickle.load( open( "ebola.p", "rb" ) )
+topicList = []    
+topicComplete = []
+topicNotComplete = []
+
+
+def requete(q,nbrows = 25):
+#     'title:' + q + ' content:' +
+    response = conn.query( q + ' fl=*,score',rows = nbrows)
+    return [(hit['title'][0] + ' ' + hit['content'][0],hit['score'],[]) for hit in response.results],[hit['id'] for hit in response.results]
+
+def checkQrel(topic_number):
+    f = open('cubetest-qrels-v4', 'r+')
+    Qrels = []
+    for line in f:
+        words = line.split()
+        if(words[0] == topic_number):
+            Qrels.append(words)
+    
+    prob = float(1/(len(Qrels) * 1.0))
+    f = open('/Users/robinjoganah/Documents/workspace/trec_dd/test/gt.txt','w+')
+    f.truncate(12000)
+    for index,Qrel in enumerate(Qrels):
+        Qrel.append(str(prob))
+        print '\t'.join(Qrel)
+        if(index != len(Qrels)-1):
+            f.write('\t'.join(Qrel) + '\n')
+        else:
+            f.write('\t'.join(Qrel))
+    print Qrels
+    print len(Qrels)
+    return Qrels
+    
+# def provide_feedback(docs,text,docs_cluster_id):    
+#     feedback = {}
+# #     print roc.X[0].todense()
+# #     print docs[0]
+#     docs = [doc for doc in docs]
+#     logging.info('Documents proposes')
+#     
+#     for index in range(len(docs)):
+#         
+#         print docs_id[docs_cluster_id[index]]
+#         logging.info(docs_id[docs_cluster_id[index]])
+#         if raw_input('is the document relevant ? (y,n)') == 'y':
+#             while(1):
+#                 id_topic = raw_input('topic id : '  )
+#                 if id_topic not in topicList:
+#                     topicList.append(id_topic)
+#                 grade = raw_input('grade : ')
+#                 if(id_topic in feedback):
+#                     feedback[id_topic].append((index,grade))        
+#                 else:
+#                     feedback[id_topic] = [(index,grade)]
+#                 if raw_input('is the document relevant for another topic ? (y,n)') == 'n':
+#                     break   
+#     return feedback
+
+def explore():
+    print 'explore'
+
+def exploit(topic_id):
+    print 'exploit'
+
+def quantityInf(feedback):
+    for key, value in feedback.iteritems():
+        qt = sum([int(val[1]) for val in value])
+        if qt>5:
+            topicComplete.append(key)
+        elif(key not in topicNotComplete):
+            topicNotComplete[key] = [[],[]]
+    
+def get_feedback(file_results,Qrels,ids,docs_id):
+    feedback =  {}
+    Qrels_docs_id = [line[2] for line in Qrels]
+    file_results.truncate()
+    for index in range(5):
+        doc = docs_id[ids[index]]
+        logging.info(doc)
+        file_results.write(doc + '\n')
+        indices = [i for i, x in enumerate(Qrels_docs_id) if x == doc]
+        topics = [Qrels[i][1] for i, x in enumerate(Qrels_docs_id) if x == doc]
+        print indices
+        for i in indices:
+            print 'inQrels' + str(i)
+            id_topic = Qrels[i][1]
+            grade = Qrels[i][3]
+            if(id_topic in feedback):
+                feedback[id_topic].append((i,doc,grade))
+            else:
+                feedback[id_topic] = [(i,doc,grade)]
+    return feedback
+            
+        
+        
+        
+
+# delete_all_docs()
+# indexer(file_load="dataprocessing/illicits.csv")
+# q='*:*'
+# response = conn.query( q + ' fl=*,score',rows = 30)
+# data = [(hit['title'][0],hit['score'],hit['content']) for hit in response.results]
+# print data
+# for Qrels_id in range(89,118):
+#     Qrels = checkQrel('DD15-' + Qrels_id)
+
+def run(reqid = 'DD15-118',reqw='Stealth Paypal'):
+    
+    file_results = open('results.txt','w')
+    Qrels = checkQrel(reqid)
+    Qrels_docs_id = [line[2] for line in Qrels]
+    q = reqw
+    data,docs_id = requete(q, 5)
+    file_solr = open('results_solr.txt','w')
+    logging.info('DOCS SOLR seul' + str(Qrelid))
+    for doc in docs_id:
+        i_topics = [Qrels[i][1] for i, x in enumerate(Qrels_docs_id) if x == doc]
+        logging.info(doc + ' ' + 'topics : ' + str(i_topics))
+        file_solr.write(doc + '\n')
+    file_solr.close()
+#     output.format_results(reqid, 150, 'test',"results_solr.txt")
+    cubetest.run()
+    time.sleep(1)
+    
+    data,docs_id = requete(q)
+    roc = Rocchio(data,q)
+    
+    docs,text,docs_kmean,km,top5_solr_kmean = roc.main()
+    docs_lda,word_topics = roc.lda()
+    # print 'docs lda'
+    # print docs_lda
+    # time.sleep(10)
+    # newreq = [' '.join(word[0:5]) for word in word_topics]
+    # for req in newreq:
+    #     print req
+    #     data = requete(req)
+    #     print data
+    # allWords = ' '.join(newreq)
+    # print 'ALL WORD'
+    # print allWords
+    # new_query  = q + ' NOT(' + newreq[0] + ')'
+    # print new_query
+    # data = requete(new_query)
+    # print data
+    # print ['topic id ' + str(index) + ' : ' + ' '.join(word) for index,word in enumerate(word_topics)]
+    # print 'docs kmean'
+    # print docs_kmean
+    # print text
+    docs_cluster = [doc[0] for doc in docs_kmean]
+    docs_cluster_id = [doc[0] for doc in docs_cluster] 
+    print docs_cluster
+    doc_to_provide = [roc.X[doc].todense() for doc,score in docs_cluster]
+    count = 0
+    #Docs solr_kmean
+    top5_solr_kmean
+    file_solr_kmean = open('results_solr_kmean.txt','w+')
+    logging.info('DOCS Solr_kmean :' + str(Qrelid))
+    for doc in top5_solr_kmean:
+        i_topics = [Qrels[i][1] for i, x in enumerate(Qrels_docs_id) if x == docs_id[doc[0]]]
+        logging.info(docs_id[doc[0]] + ' ' + 'topics : ' + ' '.join(i_topics))
+        print docs_id[doc[0]]
+        file_solr_kmean.write(docs_id[doc[0]]+ '\n')
+#         logging.info(docs_id[doc[0]])
+    file_solr_kmean.close()
+#     output.format_results(reqid, 150, 'test',"results_solr_kmean.txt")
+    cubetest.run()
+    time.sleep(1)
+    #Docs LDA
+
+    new_queries = [' '.join(word_list) for word_list in word_topics]
+    logging.info('Queries LDA')
+    logging.info(str(new_queries))
+    results_lda = [requete(new_query,1) for new_query in new_queries]
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(results_lda)
+   
+    top_5_lda = [docs[0] for docs in docs_lda]
+    top_5_lda = sorted(top_5_lda, key =lambda value:value[1], reverse = True )
+    top_5_lda_txt = [data[doc[0]] for doc in top_5_lda]
+    top_5_lda = [docs_id[doc[0]] for doc in top_5_lda]
+    
+    print top_5_lda_txt
+    time.sleep(10)
+    print top_5_lda
+      
+    file_lda = open('results_lda.txt','w+')
+    logging.info('DOCS LDA-Centroides :' + str(Qrelid))
+    for result in top_5_lda:
+        i_topics = [Qrels[i][1] for i, x in enumerate(Qrels_docs_id) if x == result]
+        logging.info(result + ' ' + 'topics : ' + str(i_topics))
+#         print result[1][0]
+        file_lda.write(result + '\n')
+#         logging.info(result[1][0])
+    file_lda.close()
+#     output.format_results(reqid, 150, 'test',"results_lda.txt")
+    cubetest.run()
+    time.sleep(1)
+    
+    
+    file_lda = open('results_lda.txt','w+')
+    logging.info('DOCS LDA :' + str(Qrelid))
+    for result in results_lda:
+        i_topics = [Qrels[i][1] for i, x in enumerate(Qrels_docs_id) if x == result[1][0]]
+        logging.info(result[1][0] + ' ' + 'topics : ' + str(i_topics))
+#         print result[1][0]
+        file_lda.write(result[1][0] + '\n')
+#         logging.info(result[1][0])
+    file_lda.close()
+#     output.format_results(reqid, 150, 'test',"results_lda.txt")
+    cubetest.run()
+    time.sleep(1)
+       
+    while(1):
+        docs_clustern = [doc[count] for doc in docs_kmean]
+        docs_cluster_id = [doc[0] for doc in docs_clustern]
+        logging.info('DOCS Kmeans :' + str(Qrelid))
+        feedbacks = get_feedback(file_results,Qrels,docs_cluster_id,docs_id)
+        print feedbacks
+#         time.sleep(5)
+#         if feedbacks:
+#             keywords = []
+#             for topicId, documents in feedbacks.iteritems():
+#                 subtopic_grade_rel = []
+#                 subtopic_grade_non_rel =[]
+#                 print "TOPIC ID  : " + str(topicId)
+#                 listidingrade=[]
+#                 for doc in feedbacks[topicId]:
+#                     listidingrade.append(doc[0])
+#                     subtopic_grade_rel.append(roc.X[doc[0]])
+#     #                 subtopic_grade_rel.append(docs[doc[0]])
+#                 for doc in range(len(docs)):
+#                         if(doc not in listidingrade):
+#                             subtopic_grade_non_rel.append(docs[doc])
+#                 new_query = roc.rocchio_algorithm(roc.query_vector.todense(), subtopic_grade_rel, subtopic_grade_non_rel)
+#                 cx = csr_matrix(new_query)
+#                 cx = coo_matrix(cx)
+#                 values = []
+#                 for i,j,v in zip(cx.row, cx.col, cx.data):
+#                     values.append((roc.count_vect.get_feature_names()[j],v))
+#                 new_query = sorted(values,key=lambda value:value[1],reverse=True)
+#                 print new_query[0:5]
+#                 new_query = new_query[0][0] + ' ' + new_query[1][0] + ' ' + new_query[2][0]+ ' ' + new_query[3][0] + ' '+new_query[4][0]
+#                 print 'New Query',new_query
+#                 time.sleep(5)
+# #                 data = requete(new_query)
+#                 data,docs_id = requete(new_query, 5)
+#                 file_solr = open('results_solr.txt','r+')
+#                 for doc in docs_id:
+#                     print doc
+#                     file_solr.write(doc + '\n')
+#                 file_solr.close()
+#                 output.format_results(reqid, 150, 'test',"results_solr.txt")
+#                 cubetest.run()
+#                 time.sleep(1)
+#                 keywords.append(new_query)
+        count += 1
+        break
+    
+#         if raw_input('Continue ? (y,n)') == 'n':
+#             break
+    file_results.close()
+#     output.format_results(reqid, 150, 'test',"results.txt")
+    cubetest.run()
+
+#     if keywords:
+#         keywords_avoid = ' '.join(keywords)
+#         keywords_avoid = set(nltk.word_tokenize(keywords_avoid))
+#         keywords_avoid = [word for word in keywords_avoid if word not in q]
+#         keywords_avoid = ' '.join(keywords_avoid)
+#         new_query  = q + ' NOT(' + keywords_avoid + ')'
+#         print 'query avec not'
+#         print new_query
+#         data = requete(new_query)
+        
+
+requetes_file = open('req.txt','r+')
+requetes = [line[:-1] for line in requetes_file]
+print requetes
+    
+  
+for Qrels_id in range(89,119):
+    logging.info('RUN : ' +  time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime()))
+    if(Qrels_id!= 999):
+        Qrelid = 'DD15-' + str(Qrels_id)
+        Qrelwords = requetes[Qrels_id - 89]
+        print Qrelwords
+#         time.sleep(20)
+        run(Qrelid,Qrelwords)
+# 
+# run('DD15-118','Stealth Paypal')
+# print "Query Sparse Matrix"
+# print roc.query_vector
+# for subtopic in range(len(feedbacks[0])):
+#     new_query = roc.rocchio_algorithm(roc.query_vector.todense(), subtopic_grade_rel[subtopic], subtopic_grade_non_rel[subtopic])
+#     print "\n Sparse matrix for subtopic :" + str(subtopic)
+#     cx = csr_matrix(new_query)
+#     cx = coo_matrix(cx)
+#     for i,j,v in zip(cx.row, cx.col, cx.data):
+#         print roc.count_vect.get_feature_names()[j]
+#         print "(%d, %d), %s" % (i,j,v)
+
+            
+ 
+# EM = ExpectationMaximization(data)
+# EM.expectation_maximization(k=2)
+
